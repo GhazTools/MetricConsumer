@@ -17,9 +17,9 @@ from kafka import KafkaConsumer
 from pydantic import ValidationError
 
 # LOCAL LIBRARY IMPORTS
-from src.app_logger import AppLogger
-from src.environment import Environment, EnvironmentVariableKeys
-from src.metric_model import MetricModel
+from utils.app_logger import AppLogger
+from utils.environment import Environment, EnvironmentVariableKeys
+from models.metric_model import MetricModel
 
 
 class Consumer:
