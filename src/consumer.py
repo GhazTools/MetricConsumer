@@ -10,6 +10,7 @@ Edit Log:
 
 # STANDARD LIBRARY IMPORTS
 from json import loads
+from typing import Optional
 
 # THIRD PARTY LIBRARY IMPORTS
 from kafka import KafkaConsumer
@@ -25,9 +26,9 @@ class Consumer:
     A class to handle the Kafka consumer
     """
 
-    _instance = None
+    _instance: Optional["Consumer"] = None
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args, **kwargs) -> "Consumer":
         """
         A method to create a singleton instance of the class
         """
