@@ -9,12 +9,15 @@ Edit Log:
 """
 
 # STANDARD LIBRARY IMPORTS
-from kafka import KafkaConsumer
+from json import loads
 
 # THIRD PARTY LIBRARY IMPORTS
+from kafka import KafkaConsumer
+from pydantic import ValidationError
 
 # LOCAL LIBRARY IMPORTS
 from src.environment import Environment, EnvironmentVariableKeys
+from src.metric_model import MetricModel
 
 
 class Consumer:
@@ -47,7 +50,8 @@ class Consumer:
         """
 
         for message in self._kafka_consumer:
-            print(message.value.decode())
+            if message.value:
+                print(message.value)
 
     def _get_kafka_consumer(self) -> KafkaConsumer:
         """
@@ -55,12 +59,14 @@ class Consumer:
         """
 
         return KafkaConsumer(
-            "metric_consumer_topic",
+            Environment.get_environment_variable(EnvironmentVariableKeys.METRIC_TOPIC),
             bootstrap_servers=Environment.get_environment_variable(
                 EnvironmentVariableKeys.BOOTSTRAP_SERVERS
             ),
             auto_offset_reset="earliest",  # Start reading at the earliest message
-            group_id="metric_consumer_group",  # Consumer group ID
+            group_id=Environment.get_environment_variable(
+                EnvironmentVariableKeys.METRIC_TOPIC_GROUP_ID
+            ),
             security_protocol=Environment.get_environment_variable(
                 EnvironmentVariableKeys.SECURITY_PROTOCOL
             ),
@@ -73,4 +79,18 @@ class Consumer:
             sasl_plain_password=Environment.get_environment_variable(
                 EnvironmentVariableKeys.SASL_PLAN_PASSWORD
             ),
+            value_deserializer=self.deserialize_user_message,  # Use the custom deserializer
         )
+
+    def deserialize_user_message(self, message: bytes) -> MetricModel | None:
+        """
+        A method to deserialize the user message
+        """
+
+        try:
+            data = loads(message.decode("utf-8"))
+            return MetricModel(**data)
+
+        except ValidationError as e:
+            print(f"Message validation error: {e}")
+            return None
