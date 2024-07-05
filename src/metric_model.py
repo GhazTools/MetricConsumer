@@ -9,11 +9,20 @@ Edit Log:
 """
 
 # STANDARD LIBRARY IMPORTS
+from typing import Optional
 
 # THIRD PARTY LIBRARY IMPORTS
 from pydantic import BaseModel
 
 # LOCAL LIBRARY IMPORTS
+
+
+class AdditinalMetadata(BaseModel):
+    """
+    A class to represent the additional metadata
+    """
+
+    latency: Optional[float] = None
 
 
 class MetricModel(BaseModel):
@@ -24,3 +33,4 @@ class MetricModel(BaseModel):
     application: str
     metric_name: str
     timestamp: str
+    additional_metadata: Optional[AdditinalMetadata] = None

@@ -10,7 +10,7 @@ Edit Log:
 
 # STANDARD LIBRARY IMPORTS
 from json import loads
-from typing import Optional
+from typing import Optional, cast
 
 # THIRD PARTY LIBRARY IMPORTS
 from kafka import KafkaConsumer
@@ -52,7 +52,9 @@ class Consumer:
 
         for message in self._kafka_consumer:
             if message.value:
-                print(message.value)
+                message_value: MetricModel = cast(MetricModel, message.value)
+
+                print(message_value)
 
     def _get_kafka_consumer(self) -> KafkaConsumer:
         """
@@ -80,10 +82,10 @@ class Consumer:
             sasl_plain_password=Environment.get_environment_variable(
                 EnvironmentVariableKeys.SASL_PLAN_PASSWORD
             ),
-            value_deserializer=self.deserialize_user_message,  # Use the custom deserializer
+            value_deserializer=self._deserialize_user_message,
         )
 
-    def deserialize_user_message(self, message: bytes) -> MetricModel | None:
+    def _deserialize_user_message(self, message: bytes) -> MetricModel | None:
         """
         A method to deserialize the user message
         """
