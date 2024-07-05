@@ -53,7 +53,7 @@ class AppLogger:
         logging_directory_path.mkdir(parents=True, exist_ok=True)
 
         handler: TimedRotatingFileHandler = logging.handlers.TimedRotatingFileHandler(
-            logging_directory_path / "token_granter.log", when="midnight"
+            logging_directory_path / "metric_consumer.log", when="midnight"
         )
 
         handler.suffix = "%m_%d_%Y"
