@@ -72,7 +72,6 @@ class Consumer:
             bootstrap_servers=Environment.get_environment_variable(
                 EnvironmentVariableKeys.BOOTSTRAP_SERVERS
             ),
-            auto_offset_reset="earliest",  # Start reading at the earliest message
             group_id=Environment.get_environment_variable(
                 EnvironmentVariableKeys.METRIC_TOPIC_GROUP_ID
             ),
@@ -89,6 +88,7 @@ class Consumer:
                 EnvironmentVariableKeys.SASL_PLAN_PASSWORD
             ),
             value_deserializer=self._deserialize_user_message,
+            auto_offset_reset="earliest",  # Start reading at the earliest message
         )
 
     def _deserialize_user_message(self, message: bytes) -> MetricModel | None:
