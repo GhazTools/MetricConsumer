@@ -17,6 +17,7 @@ from kafka import KafkaConsumer
 from pydantic import ValidationError
 
 # LOCAL LIBRARY IMPORTS
+from src.app_logger import AppLogger
 from src.environment import Environment, EnvironmentVariableKeys
 from src.metric_model import MetricModel
 
@@ -42,13 +43,18 @@ class Consumer:
         """
         A method to initialie the consumer class
         """
+        AppLogger.get_logger().info("Initializing the Kafka consumer")
 
         self._kafka_consumer = self._get_kafka_consumer()
+
+        AppLogger.get_logger().info("Kafka consumer initialized")
 
     def consume(self) -> None:
         """
         A method to consume the messages from the Kafka topic
         """
+
+        AppLogger.get_logger().info("Consuming messages from the Kafka topic")
 
         for message in self._kafka_consumer:
             if message.value:
@@ -93,7 +99,6 @@ class Consumer:
         try:
             data = loads(message.decode("utf-8"))
             return MetricModel(**data)
-
         except ValidationError as e:
-            print(f"Message validation error: {e}")
+            AppLogger.get_logger().error("Error deserializing user message: %s", e)
             return None
