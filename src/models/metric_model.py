@@ -16,7 +16,6 @@ from datetime import datetime
 from pydantic import BaseModel, validator
 
 # LOCAL LIBRARY IMPORTS
-from utils.app_logger import AppLogger
 
 
 class AdditinalMetadata(BaseModel):
