@@ -39,6 +39,8 @@ class AppLogger:
     A class used to create a logger for the application
     """
 
+    _log_file_name = "metric_consumer"
+    _logger_name = "MetricConsumer"
     __is_logging_setup: bool = False
     __logger: Logger | None = None
 
@@ -53,7 +55,7 @@ class AppLogger:
         logging_directory_path.mkdir(parents=True, exist_ok=True)
 
         handler: TimedRotatingFileHandler = logging.handlers.TimedRotatingFileHandler(
-            logging_directory_path / "token_granter.log", when="midnight"
+            logging_directory_path / f"{AppLogger._log_file_name}.log", when="midnight"
         )
 
         handler.suffix = "%m_%d_%Y"
@@ -76,7 +78,7 @@ class AppLogger:
         app_path: Path = Path(__file__).resolve().parents[1]
         logging.config.fileConfig(app_path / "logging.conf")
 
-        logger: Logger = logging.getLogger("MetricModel")
+        logger: Logger = logging.getLogger(AppLogger._logger_name)
 
         AppLogger.__logger = logger
         AppLogger.add_handler(app_path, logger)

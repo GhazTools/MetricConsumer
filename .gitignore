@@ -166,3 +166,4 @@ cython_debug/
 
 # Other Files
 .python-version
+test.py

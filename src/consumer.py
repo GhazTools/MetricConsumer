@@ -17,9 +17,10 @@ from kafka import KafkaConsumer
 from pydantic import ValidationError
 
 # LOCAL LIBRARY IMPORTS
-from src.app_logger import AppLogger
-from src.environment import Environment, EnvironmentVariableKeys
-from src.metric_model import MetricModel
+from database.repository.metrics_repository import MetricsRepository
+from utils.app_logger import AppLogger
+from utils.environment import Environment, EnvironmentVariableKeys
+from src.models.metric_model import MetricModel
 
 
 class Consumer:
@@ -60,7 +61,8 @@ class Consumer:
             if message.value:
                 message_value: MetricModel = cast(MetricModel, message.value)
 
-                print(message_value)
+                with MetricsRepository() as repository:
+                    repository.insert_metric(message_value)
 
     def _get_kafka_consumer(self) -> KafkaConsumer:
         """
