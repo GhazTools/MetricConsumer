@@ -1,0 +1,8 @@
+annotated-types==0.7.0
+greenlet==3.0.3
+kafka-python==2.0.2
+psycopg2-binary==2.9.9
+pydantic==2.8.2
+pydantic_core==2.20.1
+SQLAlchemy==2.0.31
+typing_extensions==4.12.2
